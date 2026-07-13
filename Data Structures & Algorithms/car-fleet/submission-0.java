@@ -1,0 +1,44 @@
+class Solution {
+    public int carFleet(int target, int[] position, int[] speed) {
+
+        int n = position.length;
+
+        // Store position and time
+        double[][] cars = new double[n][2];
+
+        for (int i = 0; i < n; i++) {
+            cars[i][0] = position[i];
+            cars[i][1] = (double) (target - position[i]) / speed[i];
+        }
+
+        // Sort by position
+        Arrays.sort(cars, (a, b) -> Double.compare(a[0], b[0]));
+
+        boolean[] merged = new boolean[n];
+
+        int fleets = 0;
+
+        // Start from the car closest to target
+        for (int i = n - 1; i >= 0; i--) {
+
+            if (merged[i])
+                continue;
+
+            fleets++;
+
+            // Compare with all cars behind
+            for (int j = i - 1; j >= 0; j--) {
+
+                // If car behind reaches earlier or at same time,
+                // it catches this fleet.
+                if (cars[j][1] <= cars[i][1]) {
+                    merged[j] = true;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return fleets;
+    }
+}
